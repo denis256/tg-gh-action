@@ -1,5 +1,5 @@
 FROM ubuntu:22.04
-
+ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y \
     curl \
     git \
@@ -14,6 +14,8 @@ RUN echo 'export PATH="$HOME/.tfenv/bin:$PATH"' >> ~/.bash_profile
 
 RUN git clone https://github.com/cunymatthieu/tgenv.git ~/.tgenv
 RUN echo 'export PATH="$HOME/.tgenv/bin:$PATH"' >> ~/.bash_profile
+
+ENV PATH="$HOME/.tfenv/bin:$HOME/.tgenv/bin:${PATH}"
 
 COPY ["src", "/src/"]
 
