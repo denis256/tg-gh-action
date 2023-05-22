@@ -3,11 +3,11 @@ set -euxo pipefail
 
 export TG_VERSION=${INPUT_TG_VERSION:-latest}
 export TF_VERSION=${INPUT_TF_VERSION:-latest}
-export TF_COMMAND=${INPUT_TF_COMMAND:-plan}
-export TF_DIR=${INPUT_TF_DIR:-/}
+export TG_COMMAND=${INPUT_TG_COMMAND:-plan}
+export TG_DIR=${INPUT_TG_DIR:-/}
 
 tfenv install "${TF_VERSION}"
 tgenv install "${TG_VERSION}"
 
-cd "${TF_DIR}"
-terragrunt "${TF_COMMAND}"
+cd "${TG_DIR}"
+terragrunt "${TG_COMMAND}"
