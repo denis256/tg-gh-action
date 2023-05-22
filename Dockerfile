@@ -15,7 +15,7 @@ RUN echo 'export PATH="$HOME/.tfenv/bin:$PATH"' >> ~/.bash_profile
 RUN git clone https://github.com/cunymatthieu/tgenv.git ~/.tgenv
 RUN echo 'export PATH="$HOME/.tgenv/bin:$PATH"' >> ~/.bash_profile
 
-ENV PATH="$HOME/.tfenv/bin:$HOME/.tgenv/bin:${PATH}"
+ENV PATH="/root/.tfenv/bin:/root/.tgenv/bin:${PATH}"
 
 COPY ["src", "/src/"]
 

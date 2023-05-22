@@ -14,7 +14,10 @@ inputs:
     required: true
     default: 'latest'
   tf_command:
-    description: 'Terraform or Terragrunt subcommand to execute.'
+    description: 'Terragrunt subcommand to execute.'
+    required: true
+  tf_dir:
+    description: 'Directory to run Terragrunt in.'
     required: true
 runs:
   using: 'docker'
