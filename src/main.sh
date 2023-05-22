@@ -13,4 +13,4 @@ tgenv install "${TG_VERSION}"
 tgenv use "${TG_VERSION}"
 
 cd "${TG_DIR}"
-terragrunt "${TG_COMMAND}"
+terragrunt ${TG_COMMAND}
