@@ -1,4 +1,4 @@
-name: 'Terragrunt GitHub Actions'
+name: 'Run Terragrunt Github Action'
 description: 'Runs Terragrunt commands via GitHub Actions.'
 author:  'denis256 <denis.o@linux.com>'
 branding:
