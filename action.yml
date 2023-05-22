@@ -1,0 +1,21 @@
+name: 'Terragrunt GitHub Actions'
+description: 'Runs Terragrunt commands via GitHub Actions.'
+author:  'denis256 <denis.o@linux.com>'
+branding:
+  icon: 'cloud'
+  color: 'red'
+inputs:
+  tg_version:
+    description: 'Terraform version to install.'
+    required: true
+    default: 'latest'
+  tf_version:
+    description: 'Terraform version to install.'
+    required: true
+    default: 'latest'
+  tf_command:
+    description: 'Terraform or Terragrunt subcommand to execute.'
+    required: true
+runs:
+  using: 'docker'
+  image: './Dockerfile'
