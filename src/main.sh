@@ -31,7 +31,7 @@ function run_terragrunt {
   local -r command="$2"
 
   cd "${dir}"
-  terragrunt "${command}" --terragrunt-non-interactive
+  terragrunt "${command[@]}" --terragrunt-non-interactive
 }
 
 function main {
