@@ -29,7 +29,7 @@ function run_terragrunt {
   local -r command="$1"
 
   cd "${dir}"
-  terragrunt "${command}"
+  terragrunt "${command}" --terragrunt-non-interactive
 }
 
 function main {
