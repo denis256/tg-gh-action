@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+[[ "${TRACE}" ]] && set -x
+
 readonly TF_VERSION=${INPUT_TF_VERSION:-latest}
 readonly TG_VERSION=${INPUT_TG_VERSION:-latest}
 readonly TG_COMMAND=${INPUT_TG_COMMAND:-plan}
