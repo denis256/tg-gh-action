@@ -28,7 +28,7 @@ function install_terragrunt {
 
 function run_terragrunt {
   local -r dir="$1"
-  local -r command="$1"
+  local -r command="$2"
 
   cd "${dir}"
   terragrunt "${command}" --terragrunt-non-interactive
