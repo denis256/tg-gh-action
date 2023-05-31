@@ -1,16 +1,42 @@
 #!/usr/bin/env bash
-set -euxo pipefail
+set -e
 
-export TG_VERSION=${INPUT_TG_VERSION:-latest}
-export TF_VERSION=${INPUT_TF_VERSION:-latest}
-export TG_COMMAND=${INPUT_TG_COMMAND:-plan}
-export TG_DIR=${INPUT_TG_DIR:-/}
+readonly TF_VERSION=${INPUT_TF_VERSION:-latest}
+readonly TG_VERSION=${INPUT_TG_VERSION:-latest}
+readonly TG_COMMAND=${INPUT_TG_COMMAND:-plan}
+readonly TG_DIR=${INPUT_TG_DIR:-.}
 
-tfenv install "${TF_VERSION}"
-tfenv use "${TF_VERSION}"
+function install_terraform {
+  local -r version="$1"
+  if [[ "${version}" == "none" ]]; then
+    return
+  fi
+  tfenv install "${version}"
+  tfenv use "${version}"
+}
 
-tgenv install "${TG_VERSION}"
-tgenv use "${TG_VERSION}"
+function install_terragrunt {
+  local -r version="$1"
+  if [[ "${version}" == "none" ]]; then
+    return
+  fi
+  tgenv install "${version}"
+  tgenv use "${version}"
+}
 
-cd "${TG_DIR}"
-terragrunt ${TG_COMMAND}
+function run_terragrunt {
+  local -r dir="$1"
+  local -r command="$1"
+
+  cd "${dir}"
+  terragrunt "${command}"
+}
+
+function main {
+  install_terraform "${TF_VERSION}"
+  install_terragrunt "${TG_VERSION}"
+
+  run_terragrunt "${TG_DIR}" "${TG_COMMAND}"
+}
+
+main "$@"

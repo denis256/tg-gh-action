@@ -9,10 +9,15 @@ RUN apt-get update && apt-get install -y \
     awscli \
     && rm -rf /var/lib/apt/lists/*
 
-RUN git clone --depth=1 https://github.com/tfutils/tfenv.git ~/.tfenv
+ARG TF_ENV_VERSION=master
+ARG TG_ENV_VERSION=master
+
+# clone tfenv
+RUN git clone --depth=1 --branch $TF_ENV_VERSION https://github.com/tfutils/tfenv.git ~/.tfenv
 RUN echo 'export PATH="$HOME/.tfenv/bin:$PATH"' >> ~/.bash_profile
 
-RUN git clone https://github.com/cunymatthieu/tgenv.git ~/.tgenv
+# clone tgenv
+RUN git clone  --depth=1 --branch $TG_ENV_VERSION https://github.com/cunymatthieu/tgenv.git ~/.tgenv
 RUN echo 'export PATH="$HOME/.tgenv/bin:$PATH"' >> ~/.bash_profile
 
 ENV PATH="/root/.tfenv/bin:/root/.tgenv/bin:${PATH}"
