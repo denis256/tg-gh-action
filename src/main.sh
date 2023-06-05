@@ -3,11 +3,6 @@ set -e
 
 [[ "${TRACE}" ]] && set -x
 
-readonly TF_VERSION=${INPUT_TF_VERSION:-latest}
-readonly TG_VERSION=${INPUT_TG_VERSION:-latest}
-readonly TG_COMMAND=${INPUT_TG_COMMAND:-plan}
-readonly TG_DIR=${INPUT_TG_DIR:-.}
-
 function install_terraform {
   local -r version="$1"
   if [[ "${version}" == "none" ]]; then
@@ -35,10 +30,19 @@ function run_terragrunt {
 }
 
 function main {
-  install_terraform "${TF_VERSION}"
-  install_terragrunt "${TG_VERSION}"
+  local -r tf_version=${INPUT_TF_VERSION:-latest}
+  local -r tg_version=${INPUT_TG_VERSION:-latest}
+  local -r tg_command=${INPUT_TG_COMMAND:-plan}
+  local -r tg_dir=${INPUT_TG_DIR:-.}
 
-  run_terragrunt "${TG_DIR}" "${TG_COMMAND}"
+  install_terraform "${tf_version}"
+  install_terragrunt "${tg_version}"
+
+  # add auto approve for apply and destroy commands
+  if [[ "$tg_command" =~ ^(apply|destroy|run-all[[:space:]]*apply|run-all[[:space:]]*destroy) ]]; then
+    local -r tg_command="$tg_command -auto-approve --terragrunt-non-interactive "
+  fi
+  run_terragrunt "${tg_dir}" "${tg_command}"
 }
 
 main "$@"

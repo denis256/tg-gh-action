@@ -1,6 +1,6 @@
 # github action to run terragrunt
 
-Github action to run terragrunt.
+Github action to run terragrunt, experimental project.
 
 ## References
 

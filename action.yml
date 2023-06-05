@@ -14,7 +14,7 @@ inputs:
     required: true
     default: 'latest'
   tg_command:
-    description: 'Terragrunt subcommand to execute.'
+    description: 'Terragrunt command to execute.'
     required: true
   tg_dir:
     description: 'Directory to run Terragrunt in.'
