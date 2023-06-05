@@ -22,7 +22,7 @@ RUN echo 'export PATH="$HOME/.tgenv/bin:$PATH"' >> ~/.bash_profile
 
 ENV PATH="/root/.tfenv/bin:/root/.tgenv/bin:${PATH}"
 
-ENV TF_INPUT=0
+ENV TF_INPUT=false
 ENV TF_IN_AUTOMATION=1
 
 COPY ["src", "/src/"]
