@@ -24,6 +24,7 @@ ENV PATH="/root/.tfenv/bin:/root/.tgenv/bin:${PATH}"
 
 ENV TF_INPUT=false
 ENV TF_IN_AUTOMATION=1
+ENV TRACE=1
 
 COPY ["src", "/src/"]
 
