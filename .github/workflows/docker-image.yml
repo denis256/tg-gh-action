@@ -9,14 +9,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: '0'
       - name: Set outputs
         id: vars
         run: echo "sha_short=$(git rev-list --tags --max-count=1)" >> $GITHUB_OUTPUT
       - name: Using version
         run: echo ${{ steps.vars.outputs.sha_short }}
-
       - name: Build image
         run: "cd src && docker build -t denis256/tg-gh-action:${{ steps.vars.outputs.sha_short }} . "
       - name: Login registry
