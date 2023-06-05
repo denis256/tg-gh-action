@@ -18,7 +18,7 @@ jobs:
         run: echo ${{ steps.vars.outputs.sha_short }}
 
       - name: Build image
-        run: "cd docker && docker build -t denis256/tg-gh-action:${{ steps.vars.outputs.sha_short }} . "
+        run: "cd src && docker build -t denis256/tg-gh-action:${{ steps.vars.outputs.sha_short }} . "
       - name: Login registry
         run: "docker login -u ${{ secrets.CI_USER }} -p ${{ secrets.CI_PWD }}"
       - name: Push image

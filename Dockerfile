@@ -1,3 +1,4 @@
+# Dockerfile used in execution of Github Action
 FROM denis256/tg-gh-action:master
 
 ENV TF_INPUT=false

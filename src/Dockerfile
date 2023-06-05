@@ -1,3 +1,4 @@
+# Dockerfile to build image for running Github Action
 FROM ubuntu:22.04
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y \
@@ -26,6 +27,6 @@ ENV TF_INPUT=false
 ENV TF_IN_AUTOMATION=1
 ENV TRACE=1
 
-COPY ["src", "/src/"]
+COPY [".", "/src/"]
 
 ENTRYPOINT ["/src/main.sh"]
