@@ -13,12 +13,12 @@ jobs:
           fetch-depth: '0'
       - name: Set outputs
         id: vars
-        run: echo "sha_short=$(git rev-list --tags --max-count=1)" >> $GITHUB_OUTPUT
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
       - name: Using version
-        run: echo ${{ steps.vars.outputs.sha_short }}
+        run: echo ${{ steps.vars.outputs.branch }}
       - name: Build image
-        run: "cd src && docker build -t denis256/tg-gh-action:${{ steps.vars.outputs.sha_short }} . "
+        run: "cd src && docker build -t denis256/tg-gh-action:${{ steps.vars.outputs.branch }} . "
       - name: Login registry
         run: "docker login -u ${{ secrets.CI_USER }} -p ${{ secrets.CI_PWD }}"
       - name: Push image
-        run: "docker push denis256/tg-gh-action:${{ steps.vars.outputs.sha_short }}"
+        run: "docker push denis256/tg-gh-action:${{ steps.vars.outputs.branch }}"
