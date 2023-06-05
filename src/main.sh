@@ -39,12 +39,12 @@ function main {
   install_terragrunt "${tg_version}"
 
   # add auto approve for apply and destroy commands
-  if [[ "$tg_command" =~ ^(apply|destroy|run-all[[:space:]]*apply|run-all[[:space:]]*destroy) ]]; then
+  if [[ "${tg_command[*]}" =~ ^(apply|destroy|run-all[[:space:]]*apply|run-all[[:space:]]*destroy) ]]; then
     local -r apply_or_destroy="true"
   else
     local -r apply_or_destroy="false"
   fi
-  local -r tg_arg_and_commands=$(( apply_or_destroy == "true" ? "$tg_command -auto-approve --terragrunt-non-interactive " : "$tg_command" ))
+  local -r tg_arg_and_commands=$(( apply_or_destroy == "true" ? "${tg_command[*]} -auto-approve --terragrunt-non-interactive " : "${tg_command[*]}" ))
   run_terragrunt "${tg_dir}" "${tg_arg_and_commands}"
 }
 
