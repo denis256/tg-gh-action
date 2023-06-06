@@ -59,7 +59,7 @@ function main {
   local -r tg_dir=${INPUT_TG_DIR:-.}
 
   local -r logs_file=$(mktemp)
-
+  trap "rm -rf ${logs_file}" EXIT
 
   install_terraform "${tf_version}"
   install_terragrunt "${tg_version}"
