@@ -47,7 +47,7 @@ function comment {
     return
   fi
   local -r messagePayload=$(jq -n --arg body "$message" '{"body": $body}')
-  echo "$messagePayload" | curl -s -S -H "Authorization: token $GITHUB_TOKEN" -H "Content-Type: application/json" -d @- "$comment_url" > /dev/null
+  echo "$messagePayload" | curl -s -S -H "Authorization: token $GITHUB_TOKEN" -H "Content-Type: application/json" -d @- "$comment_url"
 }
 
 function main {
