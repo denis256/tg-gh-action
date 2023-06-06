@@ -32,10 +32,10 @@ function run_terragrunt {
   local -r command=($2)
 
   cd "${dir}"
-  terragrunt_output=$(terragrunt "${command[@]}" 2>&1 || true)
-  exitCode=${?}
+  local -r terragrunt_output=$(terragrunt "${command[@]}" 2>&1 || true)
+  local -r exit_code=${PIPESTATUS[0]}
 
-  return $exitCode
+  return $exit_code
 }
 
 function comment {
@@ -66,13 +66,13 @@ function main {
   else
     local -r tg_arg_and_commands="${tg_command}"
   fi
-  exitCode=$(run_terragrunt "${tg_dir}" "${tg_arg_and_commands}")
+  local -r exit_code=$(run_terragrunt "${tg_dir}" "${tg_arg_and_commands}")
 
   if [[ "${tg_comment}" == "1" ]]; then
-    comment "${terragrunt_output}"
+    comment "Command $tg_command execution output: \`\`\` ${terragrunt_output} \`\`\`"
   fi
 
-  exit $exitCode
+  exit $exit_code
 }
 
 main "$@"
