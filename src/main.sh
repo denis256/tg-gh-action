@@ -39,7 +39,7 @@ function main {
   install_terragrunt "${tg_version}"
 
   # add auto approve for apply and destroy commands
-  if [[ "${tg_command[*]}" =~ ^(apply|destroy|run-all[[:space:]]*apply|run-all[[:space:]]*destroy) ]]; then
+  if [[ "$tg_command" == "apply"* || "$tg_command" == "destroy"* || "$tg_command" == "run-all apply"* || "$tg_command" == "run-all destroy"* ]]; then
     local -r apply_or_destroy="true"
   else
     local -r apply_or_destroy="false"
