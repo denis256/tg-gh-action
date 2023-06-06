@@ -72,7 +72,7 @@ function main {
     comment "${terragrunt_output}"
   fi
 
-  exit "${exitCode}"
+  exit ${exitCode}
 }
 
 main "$@"
