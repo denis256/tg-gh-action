@@ -30,10 +30,11 @@ function install_terragrunt {
 function run_terragrunt {
   local -r dir="$1"
   local -r command=($2)
+  local -r logs_output_file="$3"
 
   cd "${dir}"
-  terragrunt_output=$(terragrunt "${command[@]}" 2>&1 || true)
-  local -r exit_code=${PIPESTATUS[0]}
+  tee terragrunt "${command[@]}" 2>&1 | tee "${logs_output_file}" || true
+  local -r exit_code=${PIPESTATUS[1]}
 
   return $exit_code
 }
@@ -57,6 +58,9 @@ function main {
   local -r tg_comment=${INPUT_TG_COMMENT:-0}
   local -r tg_dir=${INPUT_TG_DIR:-.}
 
+  local -r logs_file=$(mktemp)
+
+
   install_terraform "${tf_version}"
   install_terragrunt "${tg_version}"
 
@@ -66,9 +70,10 @@ function main {
   else
     local -r tg_arg_and_commands="${tg_command}"
   fi
-  local -r exit_code=$(run_terragrunt "${tg_dir}" "${tg_arg_and_commands}")
+  local -r exit_code=$(run_terragrunt "${tg_dir}" "${tg_arg_and_commands}" "${logs_file}")
 
   if [[ "${tg_comment}" == "1" ]]; then
+    local -r terragrunt_output=$(cat "${logs_file}")
     comment "Command $tg_command execution output: \`\`\` ${terragrunt_output} \`\`\`"
   fi
 
