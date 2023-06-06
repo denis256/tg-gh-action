@@ -32,7 +32,7 @@ function run_terragrunt {
   local -r command=($2)
 
   cd "${dir}"
-  terragrunt_output=$(terragrunt "${command[@]}" 2>&1)
+  terragrunt_output=$(terragrunt "${command[@]}" 2>&1 || true)
   exitCode=${?}
 
   return "${exitCode}"
@@ -49,6 +49,8 @@ function comment {
 }
 
 function main {
+  log "Starting Terragrunt Action"
+  trap 'log "Exited Terragrunt Action"' EXIT
   local -r tf_version=${INPUT_TF_VERSION:-latest}
   local -r tg_version=${INPUT_TG_VERSION:-latest}
   local -r tg_command=${INPUT_TG_COMMAND:-plan}
