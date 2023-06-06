@@ -3,6 +3,12 @@ set -e
 
 [[ "${TRACE}" ]] && set -x
 
+function log {
+  local -r message="$1"
+  local -r timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+  >&2 echo -e "${timestamp} ${message}"
+}
+
 function install_terraform {
   local -r version="$1"
   if [[ "${version}" == "none" ]]; then
@@ -26,13 +32,27 @@ function run_terragrunt {
   local -r command=($2)
 
   cd "${dir}"
-  terragrunt "${command[@]}"
+  terragrunt_output=$(terragrunt "${command[@]}" 2>&1)
+  exitCode=${?}
+
+  return "${exitCode}"
+}
+
+function comment {
+  local -r message="$1"
+  local -r comment_url=$(jq -r '.pull_request.comments_url' "$GITHUB_EVENT_PATH")
+  if [[ "${comment_url}" == "" ]]; then
+    log "Skipping comment as there is not comment url"
+  fi
+  local -r messagePayload=$(jq -n --arg body "$message" '{"body": $body}')
+  echo "$messagePayload" | curl -s -S -H "Authorization: token $GITHUB_TOKEN" -H "Content-Type: application/json" -d @- "$comment_url" > /dev/null
 }
 
 function main {
   local -r tf_version=${INPUT_TF_VERSION:-latest}
   local -r tg_version=${INPUT_TG_VERSION:-latest}
   local -r tg_command=${INPUT_TG_COMMAND:-plan}
+  local -r tg_comment=${INPUT_TG_COMMENT:-0}
   local -r tg_dir=${INPUT_TG_DIR:-.}
 
   install_terraform "${tf_version}"
@@ -44,7 +64,13 @@ function main {
   else
     local -r tg_arg_and_commands="${tg_command}"
   fi
-  run_terragrunt "${tg_dir}" "${tg_arg_and_commands}"
+  exitCode=$(run_terragrunt "${tg_dir}" "${tg_arg_and_commands}")
+
+  if [[ "${tg_comment}" == "1" ]]; then
+    comment "${terragrunt_output}"
+  fi
+
+  exit "${exitCode}"
 }
 
 main "$@"

@@ -19,6 +19,10 @@ inputs:
   tg_dir:
     description: 'Directory to run Terragrunt in.'
     required: true
+  tg_comment:
+    description: 'Include execution output as comment'
+    default: '0'
+    required: false
 runs:
   using: 'docker'
   image: './Dockerfile'
