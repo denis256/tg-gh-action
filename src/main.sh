@@ -44,7 +44,7 @@ function main {
   else
     local -r apply_or_destroy="false"
   fi
-  local -r tg_arg_and_commands=$(( apply_or_destroy == "true" ? "${tg_command[*]} -auto-approve --terragrunt-non-interactive " : "${tg_command[*]}" ))
+  local -r tg_arg_and_commands=$(( apply_or_destroy == "true" ? "${tg_command} -auto-approve --terragrunt-non-interactive" : "${tg_command}" ))
   run_terragrunt "${tg_dir}" "${tg_arg_and_commands}"
 }
 
