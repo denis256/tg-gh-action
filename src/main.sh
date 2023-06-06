@@ -32,7 +32,7 @@ function run_terragrunt {
   local -r command=($2)
 
   cd "${dir}"
-  local -r terragrunt_output=$(terragrunt "${command[@]}" 2>&1 || true)
+  terragrunt_output=$(terragrunt "${command[@]}" 2>&1 || true)
   local -r exit_code=${PIPESTATUS[0]}
 
   return $exit_code
