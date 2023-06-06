@@ -41,7 +41,7 @@ function run_terragrunt {
 function comment {
   local -r message="$1"
   local -r comment_url=$(jq -r '.pull_request.comments_url' "$GITHUB_EVENT_PATH")
-  if [[ "${comment_url}" == "" ]]; then
+  if [[ "${comment_url}" == "" || "${comment_url}" == "null" ]]; then
     log "Skipping comment as there is not comment url"
   fi
   local -r messagePayload=$(jq -n --arg body "$message" '{"body": $body}')
