@@ -33,7 +33,7 @@ function run_terragrunt {
   local -r log_file=$(mktemp)
 
   cd "${dir}"
-  tee terragrunt "${command[@]}" 2>&1 | tee "${log_file}" || true
+  terragrunt "${command[@]}" 2>&1 | tee "${log_file}" || true
   local -r exit_code=${PIPESTATUS[1]}
 
   echo "${log_file} ${exit_code}"
