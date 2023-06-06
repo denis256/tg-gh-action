@@ -35,7 +35,7 @@ function run_terragrunt {
   terragrunt_output=$(terragrunt "${command[@]}" 2>&1 || true)
   exitCode=${?}
 
-  return "${exitCode}"
+  return $exitCode
 }
 
 function comment {
@@ -72,7 +72,7 @@ function main {
     comment "${terragrunt_output}"
   fi
 
-  exit ${exitCode}
+  exit $exitCode
 }
 
 main "$@"
