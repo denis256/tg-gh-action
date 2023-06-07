@@ -9,6 +9,11 @@ function log {
   >&2 echo -e "${timestamp} ${message}"
 }
 
+function clean_colors {
+  local -r input="$1"
+  echo "${input}" | sed -E 's/\x1B\[[0-9;]*[mGK]//g'
+}
+
 function install_terraform {
   local -r version="$1"
   if [[ "${version}" == "none" ]]; then
@@ -76,7 +81,8 @@ function main {
   local -r exit_code=$(("${terragrunt_exit_code}"))
 
   if [[ "${tg_comment}" == "1" ]]; then
-    local -r terragrunt_output=$(cat "${log_file}")
+    local -r terragrunt_log_content=$(cat "${log_file}")
+    local -r terragrunt_output=$(clean_colors "${terragrunt_log_content}")
     comment "Execution result of \`$tg_command\` : \n\n \`\`\` ${terragrunt_output} \`\`\`"
   fi
 
