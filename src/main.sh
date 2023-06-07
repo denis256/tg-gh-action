@@ -84,9 +84,9 @@ function main {
     local -r terragrunt_log_content=$(cat "${log_file}")
     local -r terragrunt_output=$(clean_colors "${terragrunt_log_content}")
     comment "Execution result of \`$tg_command\` in ${tg_dir} :
-    \`\`\`
-    ${terragrunt_output}
-    \`\`\`
+\`\`\`
+${terragrunt_output}
+\`\`\`
     "
   fi
 
