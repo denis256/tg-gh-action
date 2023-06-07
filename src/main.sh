@@ -30,13 +30,13 @@ function install_terragrunt {
 function run_terragrunt {
   local -r dir="$1"
   local -r command=($2)
-  local -r log_file=$(mktemp)
+
+  terragrunt_log_file=$(mktemp)
 
   cd "${dir}"
-  terragrunt "${command[@]}" 2>&1 | tee "${log_file}" || true
-  local -r exit_code=${PIPESTATUS[1]}
+  terragrunt "${command[@]}" 2>&1 | tee "${terragrunt_log_file}"
+  terragrunt_exit_code=${PIPESTATUS[0]}
 
-  echo "${log_file} ${exit_code}"
 }
 
 function comment {
@@ -52,7 +52,7 @@ function comment {
 
 function main {
   log "Starting Terragrunt Action"
-  trap 'log "Exited Terragrunt Action"' EXIT
+  trap 'log "Finished Terragrunt Action execution"' EXIT
   local -r tf_version=${INPUT_TF_VERSION:-latest}
   local -r tg_version=${INPUT_TG_VERSION:-latest}
   local -r tg_command=${INPUT_TG_COMMAND:-plan}
@@ -68,14 +68,16 @@ function main {
   else
     local -r tg_arg_and_commands="${tg_command}"
   fi
-  local -r output=$(run_terragrunt "${tg_dir}" "${tg_arg_and_commands}")
+  run_terragrunt "${tg_dir}" "${tg_arg_and_commands}"
 
-  local -r log_file="${output[0]}"
-  local -r exit_code=$(("${output[1]}"))
+  local -r log_file="${terragrunt_log_file}"
+  trap 'rm -rf ${log_file}' EXIT
+
+  local -r exit_code=$(("${terragrunt_exit_code}"))
 
   if [[ "${tg_comment}" == "1" ]]; then
     local -r terragrunt_output=$(cat "${log_file}")
-    comment "Command $tg_command execution output: \`\`\` ${terragrunt_output} \`\`\`"
+    comment "Execution result of \`$tg_command\` : \n\n \`\`\` ${terragrunt_output} \`\`\`"
   fi
 
   exit $exit_code
