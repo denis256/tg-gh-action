@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
 [[ "${TRACE}" ]] && set -x
 
@@ -28,8 +28,7 @@ function install_terragrunt {
   if [[ "${version}" == "none" ]]; then
     return
   fi
-  tgenv install "${version}"
-  tgenv use "${version}"
+  TG_VERSION="${version}" tgswitch
 }
 
 function run_terragrunt {
