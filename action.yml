@@ -23,6 +23,11 @@ inputs:
     description: 'Include execution output as comment'
     default: '0'
     required: false
+outputs:
+  tg_action_output:
+    description: 'Execution output'
+  tg_action_exit_code:
+    description: 'Terragrunt exit code'
 runs:
   using: 'docker'
   image: './Dockerfile'

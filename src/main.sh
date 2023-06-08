@@ -97,7 +97,12 @@ ${terragrunt_output}
 \`\`\`
     "
   fi
-  # pass terragrunt exit code to github action
+  echo "::set-output name=tg_action_exit_code::${exit_code}"
+  local tg_action_output
+  tg_action_output="${terragrunt_output//'%'/'%25'}"
+  tg_action_output="${tg_action_output//$'\n'/'%0A'}"
+  tg_action_output="${tg_action_output//$'\r'/'%0D'}"
+  echo "::set-output name=tg_action_output::${tg_action_output}"
   exit $exit_code
 }
 
