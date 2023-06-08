@@ -47,13 +47,13 @@ function run_terragrunt {
 
 function comment {
   local -r message="$1"
-  local -r comment_url
+  local comment_url
   comment_url=$(jq -r '.pull_request.comments_url' "$GITHUB_EVENT_PATH")
   if [[ "${comment_url}" == "" || "${comment_url}" == "null" ]]; then
     log "Skipping comment as there is not comment url"
     return
   fi
-  local -r messagePayload
+  local messagePayload
   messagePayload=$(jq -n --arg body "$message" '{ "body": $body }')
   curl -s -S -H "Authorization: token $GITHUB_TOKEN" -H "Content-Type: application/json" -d "$messagePayload" "$comment_url"
 }
@@ -81,13 +81,13 @@ function main {
   local -r log_file="${terragrunt_log_file}"
   trap 'rm -rf ${log_file}' EXIT
 
-  local -r exit_code
+  local exit_code
   exit_code=$(("${terragrunt_exit_code}"))
 
-  local -r terragrunt_log_content
+  local terragrunt_log_content
   terragrunt_log_content=$(cat "${log_file}")
   # output without colors
-  local -r terragrunt_output
+  local terragrunt_output
   terragrunt_output=$(clean_colors "${terragrunt_log_content}")
 
   if [[ "${tg_comment}" == "1" ]]; then
