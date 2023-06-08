@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -e
 
 [[ "${TRACE}" ]] && set -x
 
@@ -35,22 +35,26 @@ function run_terragrunt {
   local -r dir="$1"
   local -r command=($2)
 
+  # terragrunt_log_file can be used later as file with execution output
   terragrunt_log_file=$(mktemp)
 
   cd "${dir}"
   terragrunt "${command[@]}" 2>&1 | tee "${terragrunt_log_file}"
+  # terragrunt_exit_code can be used later to determine if execution was successful
   terragrunt_exit_code=${PIPESTATUS[0]}
 
 }
 
 function comment {
   local -r message="$1"
-  local -r comment_url=$(jq -r '.pull_request.comments_url' "$GITHUB_EVENT_PATH")
+  local -r comment_url
+  comment_url=$(jq -r '.pull_request.comments_url' "$GITHUB_EVENT_PATH")
   if [[ "${comment_url}" == "" || "${comment_url}" == "null" ]]; then
     log "Skipping comment as there is not comment url"
     return
   fi
-  local -r messagePayload=$(jq -n --arg body "$message" '{ "body": $body }')
+  local -r messagePayload
+  messagePayload=$(jq -n --arg body "$message" '{ "body": $body }')
   curl -s -S -H "Authorization: token $GITHUB_TOKEN" -H "Content-Type: application/json" -d "$messagePayload" "$comment_url"
 }
 
@@ -77,18 +81,23 @@ function main {
   local -r log_file="${terragrunt_log_file}"
   trap 'rm -rf ${log_file}' EXIT
 
-  local -r exit_code=$(("${terragrunt_exit_code}"))
+  local -r exit_code
+  exit_code=$(("${terragrunt_exit_code}"))
+
+  local -r terragrunt_log_content
+  terragrunt_log_content=$(cat "${log_file}")
+  # output without colors
+  local -r terragrunt_output
+  terragrunt_output=$(clean_colors "${terragrunt_log_content}")
 
   if [[ "${tg_comment}" == "1" ]]; then
-    local -r terragrunt_log_content=$(cat "${log_file}")
-    local -r terragrunt_output=$(clean_colors "${terragrunt_log_content}")
     comment "Execution result of \`$tg_command\` in ${tg_dir} :
 \`\`\`
 ${terragrunt_output}
 \`\`\`
     "
   fi
-
+  # pass terragrunt exit code to github action
   exit $exit_code
 }
 
