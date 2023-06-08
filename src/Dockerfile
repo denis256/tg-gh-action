@@ -27,6 +27,6 @@ ENV PATH="/root/.tfenv/bin:/tmp/tgswitch:${PATH}"
 ENV TF_INPUT=false
 ENV TF_IN_AUTOMATION=1
 
-COPY [".", "/src/main.sh"]
+COPY ["main.sh", "/action/main.sh"]
 
-ENTRYPOINT ["/src/main.sh"]
+ENTRYPOINT ["/action/main.sh"]
