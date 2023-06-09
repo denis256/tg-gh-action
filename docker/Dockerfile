@@ -1,7 +1,4 @@
-# Container to run Terragrunt and Terraform
-# Contains inside TFenv and TGSwitch to allow users to install custom versions
 FROM ubuntu:22.04
-MAINTAINER Gruntwork <info@gruntwork.io>
 
 ARG TF_ENV_VERSION=v3.0.0
 ARG TGSWITCH_VERSION=0.6.0
@@ -29,8 +26,7 @@ RUN tar -xzf /tmp/tgswitch_${TGSWITCH_VERSION}_linux_amd64.tar.gz -C $HOME/tgswi
 RUN chmod u+x $HOME/tgswitch/tgswitch
 RUN rm -rf /tmp/tgswitch_${TGSWITCH_VERSION}_linux_amd64.tar.gz
 
-
-ENV PATH="/home/terragrunt/.tfenv/bin:/home/terragrunt/tgswitch:${PATH}"
+ENV PATH="/home/terragrunt/.tfenv/bin:/home/terragrunt/tgswitch:/home/terragrunt/bin:${PATH}"
 
 ENV TF_INPUT=false
 ENV TF_IN_AUTOMATION=1
